@@ -13,18 +13,18 @@ namespace ProjectName.Core.Deploy.Connectors
     /// <summary>
     /// Custom value connector for the Image Component.
     /// </summary>
-    public class MediaComponentGridCellValueConnector : DefaultGridCellValueConnector
+    public class ImageComponentGridCellValueConnector : DefaultGridCellValueConnector
     {
-        private readonly ILogger<MediaComponentGridCellValueConnector> _logger;
+        private readonly ILogger<ImageComponentGridCellValueConnector> _logger;
 
-        public MediaComponentGridCellValueConnector(IEntityService entityService, ILocalLinkParser localLinkParser, ILogger<MediaComponentGridCellValueConnector> logger)
+        public ImageComponentGridCellValueConnector(IEntityService entityService, ILocalLinkParser localLinkParser, ILogger<ImageComponentGridCellValueConnector> logger)
             : base(entityService, localLinkParser)
         {
             _logger = logger;
         }
 
         // Location of default Umbraco grid editors: /wwwroot/umbraco/views/propertyeditors/grid/editors/[editor].html
-        public override bool IsConnector(string view) => string.Equals(view, "/App_Plugins/Grid/Picture/views/image.html", StringComparison.OrdinalIgnoreCase);
+        public override bool IsConnector(string view) => string.Equals(view, "/App_Plugins/Grid/Picture/views/picture.html", StringComparison.OrdinalIgnoreCase);
 
         public override string GetValue(GridValue.GridControl control, ICollection<ArtifactDependency> dependencies, IContextCache contextCache)
         {
@@ -37,13 +37,13 @@ namespace ProjectName.Core.Deploy.Connectors
             try
             {
                 dynamic json = JsonConvert.DeserializeObject(value);
-                Udi mediaUdi = json.udi;
-                if (mediaUdi != null)
+                Udi imageUdi = json.udi;
+                if (imageUdi != null)
                 {
                     // For some reason Umbraco Deploy expects an udi as id, so we overwrite the integer id with a string udi here
-                    json.id = mediaUdi.ToString();
+                    json.id = imageUdi.ToString();
                     control.Value = JToken.FromObject(json);
-                    dependencies.Add(new ArtifactDependency(mediaUdi, false, ArtifactDependencyMode.Exist));
+                    dependencies.Add(new ArtifactDependency(imageUdi, false, ArtifactDependencyMode.Exist));
                 }
             }
             catch (JsonReaderException innerException)
@@ -69,10 +69,10 @@ namespace ProjectName.Core.Deploy.Connectors
             try
             {
                 dynamic json = JsonConvert.DeserializeObject(value);
-                var mediaUdi = UdiParser.Parse(json.id!.ToString() ?? string.Empty) as GuidUdi;
-                if (mediaUdi != null)
+                var imageUdi = UdiParser.Parse(json.id!.ToString() ?? string.Empty) as GuidUdi;
+                if (imageUdi != null)
                 {
-                    var nodeId = GetNodeId(mediaUdi, contextCache);
+                    var nodeId = GetNodeId(imageUdi, contextCache);
                     if (nodeId.HasValue)
                     {
                         // Within the 'GetValue' method we converted the int id to an udi, here we convert it back
