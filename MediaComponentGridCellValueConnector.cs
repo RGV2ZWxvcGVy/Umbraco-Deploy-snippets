@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 namespace ProjectName.Core.Deploy.Connectors
 {
     /// <summary>
-    /// Custom value connector for the Image Component
+    /// Custom value connector for the Image Component.
     /// </summary>
     public class MediaComponentGridCellValueConnector : DefaultGridCellValueConnector
     {
